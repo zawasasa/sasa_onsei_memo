@@ -20,7 +20,6 @@ class VoiceMemoSidebar {
     await this.loadHistoryFromStorage();
     await this.loadSettings();
     this.attachEventListeners();
-    await this.updateApiKeyNotice();
     this.updateDisplay();
     // 初期化時に録音状態をリセット
     this.resetRecordingState();
@@ -33,7 +32,7 @@ class VoiceMemoSidebar {
       <div class="voice-memo-header">
         <div class="voice-memo-title-section">
           <h3 class="voice-memo-title">ささっと音声メモ</h3>
-          <div class="voice-memo-version">v1.05</div>
+          <div class="voice-memo-version">v1.0.0</div>
         </div>
         <div class="voice-memo-header-buttons">
           <button id="voice-memo-settings" class="voice-memo-btn-header">設定</button>
@@ -41,33 +40,46 @@ class VoiceMemoSidebar {
         </div>
       </div>
 
-      <div class="voice-memo-notice" id="voice-memo-notice" style="display: none;">
+      <div class="voice-memo-notice">
         設定ボタンからAPIキーを入力してください
       </div>
 
-      <div class="voice-memo-content">
-        <!-- 録音コントロール -->
-        <div class="voice-memo-controls">
-          <div class="voice-memo-control-section">
-            <button id="voice-memo-record" class="voice-memo-btn voice-memo-btn-primary">
-              🎤 録音開始
-            </button>
-            <button id="voice-memo-stop" class="voice-memo-btn voice-memo-btn-danger" style="display: none;">
-              ⏹️ 録音停止
-            </button>
-            <button id="voice-memo-cancel" class="voice-memo-btn voice-memo-btn-secondary" style="display: none;">
-              ❌ キャンセル
-            </button>
+      <div class="voice-memo-tabs">
+        <button class="voice-memo-tab active" data-tab="record">録音</button>
+        <button class="voice-memo-tab" data-tab="history">履歴</button>
+      </div>
+
+      <div class="voice-memo-tab-content">
+        <div class="voice-memo-tab-panel active" id="voice-memo-record-panel">
+          <div class="voice-memo-controls">
+            <div class="voice-memo-control-section">
+              <button id="voice-memo-record" class="voice-memo-btn voice-memo-btn-primary">
+                🎤 録音開始
+              </button>
+              <button id="voice-memo-stop" class="voice-memo-btn voice-memo-btn-danger" style="display: none;">
+                ⏹️ 録音停止
+              </button>
+              <button id="voice-memo-cancel" class="voice-memo-btn voice-memo-btn-secondary" style="display: none;">
+                ❌ キャンセル
+              </button>
+            </div>
+          </div>
+
+          <div class="voice-memo-status" id="voice-memo-status"></div>
+
+          <div class="voice-memo-info">
+            <div class="voice-memo-info-item">
+              <span class="voice-memo-info-label">録音時間上限:</span>
+              <span class="voice-memo-info-value" id="voice-memo-current-limit">5分</span>
+            </div>
+            <div class="voice-memo-info-item">
+              <span class="voice-memo-info-label">API使用料金:</span>
+              <span class="voice-memo-info-value" id="voice-memo-total-cost">¥0</span>
+            </div>
           </div>
         </div>
 
-        <!-- ステータス -->
-        <div class="voice-memo-status" id="voice-memo-status"></div>
-
-
-
-        <!-- 履歴セクション -->
-        <div class="voice-memo-history-section">
+        <div class="voice-memo-tab-panel" id="voice-memo-history-panel">
           <div class="voice-memo-history-header">
             <h4>履歴 <span id="voice-memo-history-count" class="voice-memo-count-badge">(0)</span></h4>
             <button id="voice-memo-clear-all" class="voice-memo-btn voice-memo-btn-small">全削除</button>
@@ -95,33 +107,84 @@ class VoiceMemoSidebar {
     if (settingsBtn) settingsBtn.addEventListener('click', () => this.openSettings());
     if (clearAllBtn) clearAllBtn.addEventListener('click', () => this.clearAllHistory());
 
+    // タブ切り替え機能
+    const tabs = this.sidebar.querySelectorAll('.voice-memo-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        const targetTab = e.target.getAttribute('data-tab');
+        this.switchTab(targetTab);
+      });
+    });
+
+    // キーボードショートカット
+    document.addEventListener('keydown', (e) => {
+      if (this.isVisible && e.target.closest('#voice-memo-sidebar')) {
+        if (e.key === 'Tab' && !e.shiftKey) {
+          e.preventDefault();
+          this.switchToNextTab();
+        } else if (e.key === 'Tab' && e.shiftKey) {
+          e.preventDefault();
+          this.switchToPreviousTab();
+        }
+      }
+    });
+
     document.addEventListener('openVoiceMemoSidebar', () => this.show());
     document.addEventListener('openVoiceMemoSettings', () => this.openSettings());
   }
 
-  async updateApiKeyNotice() {
-    const apiKey = await this.getApiKey();
-    const noticeEl = this.sidebar?.querySelector('#voice-memo-notice');
+  switchTab(tabName) {
+    // タブボタンの切り替え
+    const tabs = this.sidebar.querySelectorAll('.voice-memo-tab');
+    const panels = this.sidebar.querySelectorAll('.voice-memo-tab-panel');
 
-    if (noticeEl) {
-      if (apiKey && apiKey.trim() !== '') {
-        noticeEl.style.display = 'none';
+    tabs.forEach(tab => {
+      if (tab.getAttribute('data-tab') === tabName) {
+        tab.classList.add('active');
       } else {
-        noticeEl.style.display = 'block';
+        tab.classList.remove('active');
       }
-    }
+    });
+
+    // パネルの切り替え
+    panels.forEach(panel => {
+      if (panel.id === `voice-memo-${tabName}-panel`) {
+        panel.classList.add('active');
+      } else {
+        panel.classList.remove('active');
+      }
+    });
+
+    console.log(`タブを${tabName}に切り替えました`);
   }
 
+  switchToNextTab() {
+    const currentTab = this.sidebar.querySelector('.voice-memo-tab.active');
+    const allTabs = this.sidebar.querySelectorAll('.voice-memo-tab');
+    const currentIndex = Array.from(allTabs).indexOf(currentTab);
+    const nextIndex = (currentIndex + 1) % allTabs.length;
+    const nextTab = allTabs[nextIndex];
 
-  async show() {
+    this.switchTab(nextTab.getAttribute('data-tab'));
+  }
+
+  switchToPreviousTab() {
+    const currentTab = this.sidebar.querySelector('.voice-memo-tab.active');
+    const allTabs = this.sidebar.querySelectorAll('.voice-memo-tab');
+    const currentIndex = Array.from(allTabs).indexOf(currentTab);
+    const previousIndex = currentIndex === 0 ? allTabs.length - 1 : currentIndex - 1;
+    const previousTab = allTabs[previousIndex];
+
+    this.switchTab(previousTab.getAttribute('data-tab'));
+  }
+
+  show() {
     console.log('サイドバーを表示しようとしています', this.sidebar);
     if (this.sidebar) {
       this.sidebar.classList.add('voice-memo-visible');
       this.isVisible = true;
       // 表示時に録音状態をリセット
       this.resetRecordingState();
-      // APIキー通知を更新
-      await this.updateApiKeyNotice();
       console.log('サイドバーが表示されました');
     } else {
       console.error('サイドバー要素が見つかりません');
@@ -229,9 +292,9 @@ class VoiceMemoSidebar {
 
       const transcription = await this.transcribeAudio(audioBlob, apiKey);
       if (transcription) {
-        // 正確な音声ファイルの長さを計算（秒単位）
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // 音声ファイルの詳細情報を取得
         const arrayBuffer = await audioBlob.arrayBuffer();
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
         const durationSeconds = audioBuffer.duration;
         const durationMinutes = durationSeconds / 60;
@@ -258,13 +321,30 @@ class VoiceMemoSidebar {
         await this.addToHistory(transcription, costInfo);
         await this.saveSettingsData();
         this.updateDisplay();
-        this.updateStatus(`文字起こし完了 (${costInfo.durationSeconds}秒, ¥${costInfo.costJPY}): ${transcription.substring(0, 40)}...`);
+        
+        // 料金表示を分かりやすく改善
+        const costDisplay = this.formatCostDisplay(costJPY);
+        this.updateStatus(`文字起こし完了 (${costInfo.durationSeconds}秒, ${costDisplay}): ${transcription.substring(0, 40)}...`);
 
         audioContext.close();
       }
     } catch (error) {
       console.error('音声処理エラー:', error);
       this.updateStatus('文字起こしに失敗しました。APIキーやネットワーク接続を確認してください。');
+    }
+  }
+
+  // 料金表示を分かりやすくフォーマットする関数
+  formatCostDisplay(costJPY) {
+    if (costJPY < 0.01) {
+      // 0.01円未満は小数点以下3桁表示
+      return `¥${Math.round(costJPY * 1000) / 1000}`;
+    } else if (costJPY < 0.1) {
+      // 0.1円未満は小数点以下2桁表示
+      return `¥${Math.round(costJPY * 100) / 100}`;
+    } else {
+      // 0.1円以上は小数点以下1桁表示
+      return `¥${Math.round(costJPY * 10) / 10}`;
     }
   }
 
@@ -333,7 +413,7 @@ class VoiceMemoSidebar {
     });
   }
 
-  async addToHistory(text, costInfo = null) {
+  async addToHistory(text, costInfo) {
     const now = new Date();
     const item = {
       id: Date.now(),
@@ -354,7 +434,6 @@ class VoiceMemoSidebar {
     this.renderHistory();
   }
 
-
   renderHistory() {
     const historyList = this.sidebar?.querySelector('#voice-memo-history-list');
     const historyCount = this.sidebar?.querySelector('#voice-memo-history-count');
@@ -368,28 +447,21 @@ class VoiceMemoSidebar {
       return;
     }
 
-    historyList.innerHTML = this.recordings.map(item => {
-      const costDetails = item.costInfo ? `
-        <div class="voice-memo-cost-details">
-          <span class="cost-detail">⏱️ ${item.costInfo.durationSeconds}秒 (${item.costInfo.durationMinutes}分)</span>
-          <span class="cost-detail">📁 ${item.costInfo.fileSize}KB</span>
+    historyList.innerHTML = this.recordings.map(item => `
+      <div class="voice-memo-history-item" data-id="${item.id}">
+        <div class="voice-memo-history-header">
+          <div class="voice-memo-history-date">${item.createdAt}</div>
+          <button class="voice-memo-btn-delete" data-id="${item.id}">削除</button>
+        </div>
+        <div class="voice-memo-history-label">${item.label}</div>
+        <div class="voice-memo-history-text" contenteditable="true" data-id="${item.id}">${item.text}</div>
+        <div class="voice-memo-history-meta">
           <span class="cost-detail">💰 $${item.costInfo.costUSD} (¥${item.costInfo.costJPY})</span>
+          <span class="duration-detail">⏱️ ${item.costInfo.durationSeconds}秒</span>
         </div>
-      ` : '';
-
-      return `
-        <div class="voice-memo-history-item" data-id="${item.id}">
-          <div class="voice-memo-history-header">
-            <div class="voice-memo-history-date">${item.createdAt}</div>
-            <button class="voice-memo-btn-delete" data-id="${item.id}">削除</button>
-          </div>
-          <div class="voice-memo-history-label">${item.label}</div>
-          ${costDetails}
-          <div class="voice-memo-history-text" contenteditable="true" data-id="${item.id}">${item.text}</div>
-          <button class="voice-memo-btn-copy" data-text="${item.text}">コピー</button>
-        </div>
-      `;
-    }).join('');
+        <button class="voice-memo-btn-copy" data-text="${item.text}">コピー</button>
+      </div>
+    `).join('');
 
     this.attachHistoryEventListeners();
   }
@@ -626,7 +698,7 @@ class VoiceMemoSidebar {
           </div>
 
           <div class="voice-memo-form-group">
-            <label>API使用料金詳細:</label>
+            <label>API使用料金:</label>
             <div class="voice-memo-cost-display">
               <div class="voice-memo-cost-item">
                 <span>総使用料金:</span>
@@ -635,18 +707,6 @@ class VoiceMemoSidebar {
               <div class="voice-memo-cost-item">
                 <span>使用回数:</span>
                 <span id="voice-memo-usage-count">0回</span>
-              </div>
-              <div class="voice-memo-cost-item">
-                <span>平均コスト/回:</span>
-                <span id="voice-memo-average-cost">¥0</span>
-              </div>
-              <div class="voice-memo-cost-item">
-                <span>料金レート:</span>
-                <span>Whisper API: $0.006/分 (¥150/USD)</span>
-              </div>
-              <div class="voice-memo-cost-item">
-                <span>最小課金:</span>
-                <span>1秒 = $0.0001 ≈ ¥0.015</span>
               </div>
             </div>
           </div>
@@ -940,7 +1000,16 @@ class VoiceMemoSidebar {
   }
 
   updateDisplay() {
-    // 必要に応じて他の表示更新処理をここに追加
+    // メイン画面の表示更新
+    const currentLimitEl = this.sidebar?.querySelector('#voice-memo-current-limit');
+    const totalCostEl = this.sidebar?.querySelector('#voice-memo-total-cost');
+    
+    if (currentLimitEl) {
+      currentLimitEl.textContent = `${this.recordingLimit}分`;
+    }
+    if (totalCostEl) {
+      totalCostEl.textContent = `¥${Math.round(this.totalCost)}`;
+    }
   }
 
   updateSettingsDisplay() {
@@ -949,20 +1018,15 @@ class VoiceMemoSidebar {
       const recordingLimitSelect = settingsModal?.querySelector('#voice-memo-recording-limit');
       const settingsTotalCostEl = settingsModal?.querySelector('#voice-memo-settings-total-cost');
       const usageCountEl = settingsModal?.querySelector('#voice-memo-usage-count');
-      const averageCostEl = settingsModal?.querySelector('#voice-memo-average-cost');
-
+      
       if (recordingLimitSelect) {
         recordingLimitSelect.value = this.recordingLimit;
       }
       if (settingsTotalCostEl) {
-        settingsTotalCostEl.textContent = `¥${Math.round(this.totalCost * 100) / 100}`;
+        settingsTotalCostEl.textContent = `¥${Math.round(this.totalCost)}`;
       }
       if (usageCountEl) {
         usageCountEl.textContent = `${this.usageCount}回`;
-      }
-      if (averageCostEl) {
-        const averageCost = this.usageCount > 0 ? this.totalCost / this.usageCount : 0;
-        averageCostEl.textContent = `¥${Math.round(averageCost * 100) / 100}`;
       }
     } catch (error) {
       console.error('設定画面表示更新エラー:', error);
@@ -1004,7 +1068,6 @@ class VoiceMemoSidebar {
         await this.saveSettingsData();
         settingsModal.style.display = 'none';
         this.updateDisplay();
-        await this.updateApiKeyNotice();
         this.updateStatus('設定を保存しました（ローカルストレージ）');
         return;
       }
@@ -1028,7 +1091,6 @@ class VoiceMemoSidebar {
           await this.saveSettingsData();
           settingsModal.style.display = 'none';
           this.updateDisplay();
-          await this.updateApiKeyNotice();
           this.updateStatus('設定を保存しました');
         }
       });
@@ -1038,7 +1100,6 @@ class VoiceMemoSidebar {
       await this.saveSettingsData();
       settingsModal.style.display = 'none';
       this.updateDisplay();
-      await this.updateApiKeyNotice();
       this.updateStatus('設定を保存しました（ローカルストレージ）');
     }
   }
