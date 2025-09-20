@@ -100,6 +100,7 @@
 
 ```
 ささっと音声メモ_拡張/
+├── .gitignore             # Git除外設定ファイル
 ├── manifest.json          # Chrome拡張機能のマニフェスト（v3）
 ├── content.js             # メイン機能のJavaScript（サイドバーUI、録音、文字起こし）
 ├── sidebar.css            # サイドバーのスタイル（クリーンデザイン）
@@ -112,8 +113,8 @@
 │   ├── icon48.png
 │   └── icon128.png
 ├── icon.svg              # SVGアイコン（参考用）
-├── README.md             # このファイル
-└── voice_memo_requirements.md # 要件定義書
+├── ささっとアイコン.png    # メインアイコンファイル
+└── README.md             # このファイル
 ```
 
 ## 🔧 技術仕様
