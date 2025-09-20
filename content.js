@@ -44,38 +44,28 @@ class VoiceMemoSidebar {
         APIキーを入力してください
       </div>
 
-      <div class="voice-memo-tabs">
-        <button class="voice-memo-tab active" data-tab="record">録音</button>
-        <button class="voice-memo-tab" data-tab="history">履歴</button>
+      <div class="voice-memo-controls">
+        <div class="voice-memo-control-section">
+          <button id="voice-memo-record" class="voice-memo-btn voice-memo-btn-primary">
+            🎤 録音開始
+          </button>
+          <button id="voice-memo-stop" class="voice-memo-btn voice-memo-btn-danger" style="display: none;">
+            ⏹️ 録音停止
+          </button>
+          <button id="voice-memo-cancel" class="voice-memo-btn voice-memo-btn-secondary" style="display: none;">
+            ❌ キャンセル
+          </button>
+        </div>
       </div>
 
-      <div class="voice-memo-tab-content">
-        <div class="voice-memo-tab-panel active" id="voice-memo-record-panel">
-          <div class="voice-memo-controls">
-            <div class="voice-memo-control-section">
-              <button id="voice-memo-record" class="voice-memo-btn voice-memo-btn-primary">
-                🎤 録音開始
-              </button>
-              <button id="voice-memo-stop" class="voice-memo-btn voice-memo-btn-danger" style="display: none;">
-                ⏹️ 録音停止
-              </button>
-              <button id="voice-memo-cancel" class="voice-memo-btn voice-memo-btn-secondary" style="display: none;">
-                ❌ キャンセル
-              </button>
-            </div>
-          </div>
+      <div class="voice-memo-status" id="voice-memo-status"></div>
 
-          <div class="voice-memo-status" id="voice-memo-status"></div>
-
+      <div class="voice-memo-history-section">
+        <div class="voice-memo-history-header">
+          <h4>履歴 <span id="voice-memo-history-count" class="voice-memo-count-badge">(0)</span></h4>
+          <button id="voice-memo-clear-all" class="voice-memo-btn voice-memo-btn-small">全削除</button>
         </div>
-
-        <div class="voice-memo-tab-panel" id="voice-memo-history-panel">
-          <div class="voice-memo-history-header">
-            <h4>履歴 <span id="voice-memo-history-count" class="voice-memo-count-badge">(0)</span></h4>
-            <button id="voice-memo-clear-all" class="voice-memo-btn voice-memo-btn-small">全削除</button>
-          </div>
-          <div id="voice-memo-history-list" class="voice-memo-history-list"></div>
-        </div>
+        <div id="voice-memo-history-list" class="voice-memo-history-list"></div>
       </div>
     `;
 
@@ -97,76 +87,12 @@ class VoiceMemoSidebar {
     if (settingsBtn) settingsBtn.addEventListener('click', () => this.openSettings());
     if (clearAllBtn) clearAllBtn.addEventListener('click', () => this.clearAllHistory());
 
-    // タブ切り替え機能
-    const tabs = this.sidebar.querySelectorAll('.voice-memo-tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        const targetTab = e.target.getAttribute('data-tab');
-        this.switchTab(targetTab);
-      });
-    });
 
-    // キーボードショートカット
-    document.addEventListener('keydown', (e) => {
-      if (this.isVisible && e.target.closest('#voice-memo-sidebar')) {
-        if (e.key === 'Tab' && !e.shiftKey) {
-          e.preventDefault();
-          this.switchToNextTab();
-        } else if (e.key === 'Tab' && e.shiftKey) {
-          e.preventDefault();
-          this.switchToPreviousTab();
-        }
-      }
-    });
 
     document.addEventListener('openVoiceMemoSidebar', () => this.show());
     document.addEventListener('openVoiceMemoSettings', () => this.openSettings());
   }
 
-  switchTab(tabName) {
-    // タブボタンの切り替え
-    const tabs = this.sidebar.querySelectorAll('.voice-memo-tab');
-    const panels = this.sidebar.querySelectorAll('.voice-memo-tab-panel');
-
-    tabs.forEach(tab => {
-      if (tab.getAttribute('data-tab') === tabName) {
-        tab.classList.add('active');
-      } else {
-        tab.classList.remove('active');
-      }
-    });
-
-    // パネルの切り替え
-    panels.forEach(panel => {
-      if (panel.id === `voice-memo-${tabName}-panel`) {
-        panel.classList.add('active');
-      } else {
-        panel.classList.remove('active');
-      }
-    });
-
-    console.log(`タブを${tabName}に切り替えました`);
-  }
-
-  switchToNextTab() {
-    const currentTab = this.sidebar.querySelector('.voice-memo-tab.active');
-    const allTabs = this.sidebar.querySelectorAll('.voice-memo-tab');
-    const currentIndex = Array.from(allTabs).indexOf(currentTab);
-    const nextIndex = (currentIndex + 1) % allTabs.length;
-    const nextTab = allTabs[nextIndex];
-
-    this.switchTab(nextTab.getAttribute('data-tab'));
-  }
-
-  switchToPreviousTab() {
-    const currentTab = this.sidebar.querySelector('.voice-memo-tab.active');
-    const allTabs = this.sidebar.querySelectorAll('.voice-memo-tab');
-    const currentIndex = Array.from(allTabs).indexOf(currentTab);
-    const previousIndex = currentIndex === 0 ? allTabs.length - 1 : currentIndex - 1;
-    const previousTab = allTabs[previousIndex];
-
-    this.switchTab(previousTab.getAttribute('data-tab'));
-  }
 
   show() {
     console.log('サイドバーを表示しようとしています', this.sidebar);

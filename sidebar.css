@@ -712,31 +712,34 @@ body.voice-memo-sidebar-open .top-bar {
   border-color: #ffed4e;
 }
 
+/* History Section */
+.voice-memo-history-section {
+  margin-top: 20px;
+  border-top: 1px solid #e9ecef;
+  padding-top: 20px;
+}
+
 /* Scrollbar Styles */
 .voice-memo-history-list::-webkit-scrollbar,
-.voice-memo-modal-body::-webkit-scrollbar,
-.voice-memo-tab-panel::-webkit-scrollbar {
+.voice-memo-modal-body::-webkit-scrollbar {
   width: 6px;
 }
 
 .voice-memo-history-list::-webkit-scrollbar-track,
-.voice-memo-modal-body::-webkit-scrollbar-track,
-.voice-memo-tab-panel::-webkit-scrollbar-track {
+.voice-memo-modal-body::-webkit-scrollbar-track {
   background: #f1f3f5;
   border-radius: 3px;
 }
 
 .voice-memo-history-list::-webkit-scrollbar-thumb,
-.voice-memo-modal-body::-webkit-scrollbar-thumb,
-.voice-memo-tab-panel::-webkit-scrollbar-thumb {
+.voice-memo-modal-body::-webkit-scrollbar-thumb {
   background: #ced4da;
   border-radius: 3px;
   transition: all 0.2s ease;
 }
 
 .voice-memo-history-list::-webkit-scrollbar-thumb:hover,
-.voice-memo-modal-body::-webkit-scrollbar-thumb:hover,
-.voice-memo-tab-panel::-webkit-scrollbar-thumb:hover {
+.voice-memo-modal-body::-webkit-scrollbar-thumb:hover {
   background: #adb5bd;
 }
 
