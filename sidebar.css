@@ -1,8 +1,8 @@
 #voice-memo-sidebar {
   position: fixed;
   top: 0;
-  right: -420px;
-  width: 400px;
+  right: -340px;
+  width: 320px;
   height: 100vh;
   background: #ffffff;
   border-left: 1px solid #e0e0e0;
@@ -21,7 +21,7 @@
 
 /* サイドバー表示時にページ全体の右側にスペースを確保 */
 body.voice-memo-sidebar-open {
-  padding-right: 400px !important; /* 右側にパディングを追加してスペースを確保 */
+  padding-right: 320px !important; /* 右側にパディングを追加してスペースを確保 */
   transition: padding-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
