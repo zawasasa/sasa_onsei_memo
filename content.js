@@ -183,6 +183,9 @@ class VoiceMemoSidebar {
     if (this.sidebar) {
       this.sidebar.classList.add('voice-memo-visible');
       this.isVisible = true;
+      // ページ全体を左にシフト
+      document.body.classList.add('voice-memo-sidebar-open');
+      document.documentElement.classList.add('voice-memo-sidebar-open');
       // 表示時に録音状態をリセット
       this.resetRecordingState();
       console.log('サイドバーが表示されました');
@@ -194,6 +197,9 @@ class VoiceMemoSidebar {
   hide() {
     this.sidebar.classList.remove('voice-memo-visible');
     this.isVisible = false;
+    // ページ全体のシフトを解除
+    document.body.classList.remove('voice-memo-sidebar-open');
+    document.documentElement.classList.remove('voice-memo-sidebar-open');
   }
 
   toggle() {

@@ -18,6 +18,47 @@
   border-radius: 0;
 }
 
+/* サイドバー表示時にページ全体を左にシフト */
+body.voice-memo-sidebar-open {
+  margin-right: 400px !important;
+  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ページの幅を調整 */
+html.voice-memo-sidebar-open {
+  overflow-x: hidden;
+}
+
+/* 固定要素（ヘッダー、ナビゲーションなど）も調整 */
+body.voice-memo-sidebar-open header,
+body.voice-memo-sidebar-open nav,
+body.voice-memo-sidebar-open .header,
+body.voice-memo-sidebar-open .navbar,
+body.voice-memo-sidebar-open .top-bar {
+  margin-right: 400px !important;
+  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  body.voice-memo-sidebar-open {
+    margin-right: 0 !important;
+  }
+  
+  body.voice-memo-sidebar-open header,
+  body.voice-memo-sidebar-open nav,
+  body.voice-memo-sidebar-open .header,
+  body.voice-memo-sidebar-open .navbar,
+  body.voice-memo-sidebar-open .top-bar {
+    margin-right: 0 !important;
+  }
+  
+  #voice-memo-sidebar {
+    width: 100vw;
+    right: -100vw;
+  }
+}
+
 #voice-memo-sidebar.voice-memo-visible {
   right: 0;
 }
