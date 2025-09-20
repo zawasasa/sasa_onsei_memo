@@ -32,7 +32,7 @@ class VoiceMemoSidebar {
       <div class="voice-memo-header">
         <div class="voice-memo-title-section">
           <h3 class="voice-memo-title">ささっと音声メモ</h3>
-          <div class="voice-memo-version">v1.0.7</div>
+          <div class="voice-memo-version">v1.0.8</div>
         </div>
         <div class="voice-memo-header-buttons">
           <button id="voice-memo-settings" class="voice-memo-btn-header">設定</button>
@@ -40,8 +40,8 @@ class VoiceMemoSidebar {
         </div>
       </div>
 
-      <div class="voice-memo-notice">
-        設定ボタンからAPIキーを入力してください
+      <div class="voice-memo-notice" id="voice-memo-api-notice" style="display: none;">
+        APIキーを入力してください
       </div>
 
       <div class="voice-memo-tabs">
@@ -67,16 +67,6 @@ class VoiceMemoSidebar {
 
           <div class="voice-memo-status" id="voice-memo-status"></div>
 
-          <div class="voice-memo-info">
-            <div class="voice-memo-info-item">
-              <span class="voice-memo-info-label">録音時間上限:</span>
-              <span class="voice-memo-info-value" id="voice-memo-current-limit">5分</span>
-            </div>
-            <div class="voice-memo-info-item">
-              <span class="voice-memo-info-label">API使用料金:</span>
-              <span class="voice-memo-info-value" id="voice-memo-total-cost">¥0</span>
-            </div>
-          </div>
         </div>
 
         <div class="voice-memo-tab-panel" id="voice-memo-history-panel">
@@ -1005,16 +995,18 @@ class VoiceMemoSidebar {
     }
   }
 
-  updateDisplay() {
-    // メイン画面の表示更新
-    const currentLimitEl = this.sidebar?.querySelector('#voice-memo-current-limit');
-    const totalCostEl = this.sidebar?.querySelector('#voice-memo-total-cost');
-    
-    if (currentLimitEl) {
-      currentLimitEl.textContent = `${this.recordingLimit}分`;
-    }
-    if (totalCostEl) {
-      totalCostEl.textContent = `¥${Math.round(this.totalCost)}`;
+  async updateDisplay() {
+    // APIキーの状態をチェックして通知の表示を制御
+    const apiNotice = this.sidebar?.querySelector('#voice-memo-api-notice');
+    if (apiNotice) {
+      const apiKey = await this.getApiKey();
+      if (apiKey) {
+        // APIキーが設定されている場合は通知を隠す
+        apiNotice.style.display = 'none';
+      } else {
+        // APIキーが未設定の場合は通知を表示
+        apiNotice.style.display = 'block';
+      }
     }
   }
 
