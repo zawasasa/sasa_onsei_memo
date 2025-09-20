@@ -19,7 +19,7 @@
   border-radius: 0;
 }
 
-/* サイドバー表示時にページ全体の幅を調整 */
+/* サイドバー表示時にページ全体の右側にスペースを確保 */
 body.voice-memo-sidebar-open {
   padding-right: 400px !important; /* 右側にパディングを追加してスペースを確保 */
   transition: padding-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -30,43 +30,10 @@ html.voice-memo-sidebar-open {
   overflow-x: hidden;
 }
 
-/* 固定要素（ヘッダー、ナビゲーションなど）も調整 */
-body.voice-memo-sidebar-open header,
-body.voice-memo-sidebar-open nav,
-body.voice-memo-sidebar-open .header,
-body.voice-memo-sidebar-open .navbar,
-body.voice-memo-sidebar-open .top-bar {
-  width: calc(100% - 400px) !important; /* 幅を調整 */
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* メインコンテンツエリアも調整 */
-body.voice-memo-sidebar-open main,
-body.voice-memo-sidebar-open .main,
-body.voice-memo-sidebar-open .content,
-body.voice-memo-sidebar-open .container {
-  width: calc(100% - 400px) !important; /* 幅を調整 */
-  max-width: calc(100% - 400px) !important; /* 最大幅も調整 */
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
   body.voice-memo-sidebar-open {
     padding-right: 0 !important; /* モバイルではパディングを解除 */
-  }
-  
-  body.voice-memo-sidebar-open header,
-  body.voice-memo-sidebar-open nav,
-  body.voice-memo-sidebar-open .header,
-  body.voice-memo-sidebar-open .navbar,
-  body.voice-memo-sidebar-open .top-bar,
-  body.voice-memo-sidebar-open main,
-  body.voice-memo-sidebar-open .main,
-  body.voice-memo-sidebar-open .content,
-  body.voice-memo-sidebar-open .container {
-    width: 100% !important; /* モバイルでは幅を100%に戻す */
-    max-width: 100% !important;
   }
   
   #voice-memo-sidebar {
