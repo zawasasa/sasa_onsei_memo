@@ -35,7 +35,7 @@ class VoiceMemoSidebar {
           <div class="voice-memo-version">v1.1.2</div>
         </div>
         <div class="voice-memo-header-buttons">
-          <button id="voice-memo-settings" class="voice-memo-btn-header">設定</button>
+          <button id="voice-memo-settings" class="voice-memo-btn-header">⚙️ 設定</button>
           <button id="voice-memo-close" class="voice-memo-btn-close">×</button>
         </div>
       </div>
@@ -63,7 +63,7 @@ class VoiceMemoSidebar {
       <div class="voice-memo-history-section">
         <div class="voice-memo-history-header">
           <h4>履歴 <span id="voice-memo-history-count" class="voice-memo-count-badge">(0)</span></h4>
-          <button id="voice-memo-clear-all" class="voice-memo-btn voice-memo-btn-small">全削除</button>
+          <button id="voice-memo-clear-all" class="voice-memo-btn voice-memo-btn-small">🗑️ 全削除</button>
         </div>
         <div id="voice-memo-history-list" class="voice-memo-history-list"></div>
       </div>
@@ -373,7 +373,7 @@ class VoiceMemoSidebar {
       <div class="voice-memo-history-item" data-id="${item.id}">
         <div class="voice-memo-history-header">
           <div class="voice-memo-history-date">${item.createdAt}</div>
-          <button class="voice-memo-btn-delete" data-id="${item.id}">削除</button>
+          <button class="voice-memo-btn-delete" data-id="${item.id}">🗑️ 削除</button>
         </div>
         <div class="voice-memo-history-label">${item.label}</div>
         <div class="voice-memo-history-text" contenteditable="true" data-id="${item.id}">${item.text}</div>
@@ -381,7 +381,7 @@ class VoiceMemoSidebar {
           <span class="cost-detail">💰 $${item.costInfo.costUSD} (¥${item.costInfo.costJPY})</span>
           <span class="duration-detail">⏱️ ${item.costInfo.durationSeconds}秒</span>
         </div>
-        <button class="voice-memo-btn-copy" data-text="${item.text}">コピー</button>
+        <button class="voice-memo-btn-copy" data-text="${item.text}">📋 コピー</button>
       </div>
     `).join('');
 

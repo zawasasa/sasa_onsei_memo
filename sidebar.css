@@ -212,6 +212,8 @@ html.voice-memo-sidebar-open {
   min-width: 120px;
   max-width: 200px;
   padding: 12px 20px;
+  margin: 0 auto; /* センタリング */
+  display: block; /* ブロック要素にしてセンタリングを有効化 */
 }
 
 .voice-memo-btn-danger {
@@ -703,9 +705,14 @@ html.voice-memo-sidebar-open {
   border-color: #ffed4e;
 }
 
+/* Control Section */
+.voice-memo-controls {
+  margin: 0 16px; /* 左右にマージンを追加 */
+}
+
 /* History Section */
 .voice-memo-history-section {
-  margin-top: 20px;
+  margin: 20px 16px 0 16px; /* 左右にマージンを追加 */
   border-top: 1px solid #e9ecef;
   padding-top: 20px;
 }
