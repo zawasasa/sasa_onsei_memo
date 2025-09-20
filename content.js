@@ -36,8 +36,8 @@ class VoiceMemoSidebar {
         </div>
         <div class="voice-memo-header-buttons">
           <button id="voice-memo-settings" class="voice-memo-btn-header">⚙️ 設定</button>
-          <button id="voice-memo-close" class="voice-memo-btn-close">×</button>
         </div>
+        <button id="voice-memo-close" class="voice-memo-btn-close">×</button>
       </div>
 
       <div class="voice-memo-notice" id="voice-memo-api-notice" style="display: none;">
