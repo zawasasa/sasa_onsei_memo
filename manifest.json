@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ささっと音声メモ",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "音声録音とAI文字起こしによる簡単メモツール",
   "permissions": [
     "storage",
