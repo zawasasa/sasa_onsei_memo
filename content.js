@@ -46,8 +46,8 @@ class VoiceMemoSidebar {
 
       <div class="voice-memo-controls">
         <div class="voice-memo-control-section">
-          <button id="voice-memo-record" class="voice-memo-btn voice-memo-btn-primary">
-            🎤 録音開始
+          <button id="voice-memo-record" class="voice-memo-btn voice-memo-btn-primary voice-memo-btn-record">
+            🎙️ 録音開始
           </button>
           <button id="voice-memo-stop" class="voice-memo-btn voice-memo-btn-danger" style="display: none;">
             ⏹️ 録音停止

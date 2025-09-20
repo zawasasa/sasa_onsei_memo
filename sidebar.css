@@ -206,6 +206,14 @@ html.voice-memo-sidebar-open {
   border-color: #ffed4e;
 }
 
+/* 録音ボタンの幅を調整 */
+.voice-memo-btn-record {
+  width: auto !important;
+  min-width: 120px;
+  max-width: 200px;
+  padding: 12px 20px;
+}
+
 .voice-memo-btn-danger {
   background: #ffffff;
   color: #dc3545;
