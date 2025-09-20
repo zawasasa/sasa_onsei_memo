@@ -12,16 +12,17 @@
   font-size: 14px;
   color: #000000;
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   border-radius: 0;
 }
 
-/* サイドバー表示時にページ全体を左にシフト */
+/* サイドバー表示時にページ全体の幅を調整 */
 body.voice-memo-sidebar-open {
-  margin-right: 400px !important;
-  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: calc(100vw - 400px) !important;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ページの幅を調整 */
@@ -35,22 +36,37 @@ body.voice-memo-sidebar-open nav,
 body.voice-memo-sidebar-open .header,
 body.voice-memo-sidebar-open .navbar,
 body.voice-memo-sidebar-open .top-bar {
-  margin-right: 400px !important;
-  transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: calc(100vw - 400px) !important;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* メインコンテンツエリアも調整 */
+body.voice-memo-sidebar-open main,
+body.voice-memo-sidebar-open .main,
+body.voice-memo-sidebar-open .content,
+body.voice-memo-sidebar-open .container {
+  width: calc(100vw - 400px) !important;
+  max-width: calc(100vw - 400px) !important;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
   body.voice-memo-sidebar-open {
-    margin-right: 0 !important;
+    width: 100vw !important;
   }
   
   body.voice-memo-sidebar-open header,
   body.voice-memo-sidebar-open nav,
   body.voice-memo-sidebar-open .header,
   body.voice-memo-sidebar-open .navbar,
-  body.voice-memo-sidebar-open .top-bar {
-    margin-right: 0 !important;
+  body.voice-memo-sidebar-open .top-bar,
+  body.voice-memo-sidebar-open main,
+  body.voice-memo-sidebar-open .main,
+  body.voice-memo-sidebar-open .content,
+  body.voice-memo-sidebar-open .container {
+    width: 100vw !important;
+    max-width: 100vw !important;
   }
   
   #voice-memo-sidebar {
@@ -720,24 +736,28 @@ body.voice-memo-sidebar-open .top-bar {
 }
 
 /* Scrollbar Styles */
+#voice-memo-sidebar::-webkit-scrollbar,
 .voice-memo-history-list::-webkit-scrollbar,
 .voice-memo-modal-body::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
+#voice-memo-sidebar::-webkit-scrollbar-track,
 .voice-memo-history-list::-webkit-scrollbar-track,
 .voice-memo-modal-body::-webkit-scrollbar-track {
   background: #f1f3f5;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
+#voice-memo-sidebar::-webkit-scrollbar-thumb,
 .voice-memo-history-list::-webkit-scrollbar-thumb,
 .voice-memo-modal-body::-webkit-scrollbar-thumb {
   background: #ced4da;
-  border-radius: 3px;
+  border-radius: 4px;
   transition: all 0.2s ease;
 }
 
+#voice-memo-sidebar::-webkit-scrollbar-thumb:hover,
 .voice-memo-history-list::-webkit-scrollbar-thumb:hover,
 .voice-memo-modal-body::-webkit-scrollbar-thumb:hover {
   background: #adb5bd;
