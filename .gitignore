@@ -1,10 +1,8 @@
-# 個人的なファイル（公開しない）
+# 開発中のファイル（公開しない）
 cursor_.md
-Noteの記事_ささっと音声メモ拡張機能.md
-ささ（hiroki_sasazawa）の記事スタイルガイド.md
-
-# 開発中の内部文書（公開しない）
-voice_memo_requirements.md
+*記事*.md
+*スタイルガイド*.md
+*requirements*.md
 
 # 開発用ファイル
 *.log
