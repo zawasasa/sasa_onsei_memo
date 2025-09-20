@@ -32,7 +32,7 @@ class VoiceMemoSidebar {
       <div class="voice-memo-header">
         <div class="voice-memo-title-section">
           <h3 class="voice-memo-title">ささっと音声メモ</h3>
-          <div class="voice-memo-version">v1.1.3</div>
+          <div class="voice-memo-version">v1.1.4</div>
         </div>
         <div class="voice-memo-header-buttons">
           <button id="voice-memo-settings" class="voice-memo-btn-header">⚙️ 設定</button>
